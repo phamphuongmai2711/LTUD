@@ -1,67 +1,167 @@
 {% extends 'main/base.html' %}
 {% block title %}Tin Tức — NÓTE{% endblock %}
 
-{%block extra_css%}
-<style>
-        :root {
-            --bg-body: #f5f5f7;
-            --bg-card: #ffffff;
-            --text-dark: #111111;
-            --text-muted: #6e6e73;
-            --border-color: #edeef0;
-            --font-serif: 'Times New Roman', Times, serif;
-            --radius-large: 20px;
-            --shadow-premium: 0 8px 24px rgba(0,0,0,0.04);
-            --transition-smooth: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-serif); background-color: var(--bg-body); color: var(--text-dark); padding-bottom: 80px; }
-        .header-site { background-color: #ffffff; text-align: center; padding: 35px 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 40px; }
-        .header-site h1 { font-size: 32px; font-weight: normal; text-transform: uppercase; letter-spacing: 3px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-direction: column; gap: 50px; }
-        .category-section { display: flex; flex-direction: column; }
-        .category-heading { font-size: 22px; font-weight: normal; text-transform: uppercase; letter-spacing: 1.5px; color: #333; margin-bottom: 25px; text-align: center; }
-        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        .news-card { display: flex; flex-direction: column; background-color: var(--bg-card); border-radius: var(--radius-large); box-shadow: var(--shadow-premium); overflow: hidden; border: 1px solid var(--border-color); cursor: pointer; transition: all 0.3s ease; }
-        .news-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
-        .news-thumb { width: 100%; aspect-ratio: 1/1; overflow: hidden; background-color: #eaeaea; }
-        .news-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: var(--transition-smooth); }
-        .news-card:hover .news-thumb img { transform: scale(1.04); }
-        .news-info { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
-        .news-info h3 { font-size: 17px; font-weight: normal; line-height: 1.4; }
-        .news-info h3 a { color: var(--text-dark); text-decoration: underline; text-underline-offset: 3px; }
-        .news-date { font-size: 13px; color: var(--text-muted); margin-top: auto; }
-        .no-post-msg { text-align: center; color: #888; padding: 30px; font-style: italic; }
-        @media (max-width: 900px) { .news-grid { grid-template-columns: 1fr 1fr; } }
-        @media (max-width: 600px) { .news-grid { grid-template-columns: 1fr; } }
-    </style>
+{% block extra_css %}
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .8s ease both; }
+  .fade-up-1 { animation-delay: .1s; }
+  .fade-up-2 { animation-delay: .2s; }
+  .fade-up-3 { animation-delay: .3s; }
+
+  /* ── Shared Section Styles (Đồng bộ với About) ── */
+  .news-page-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px 100px;
+  }
+  @media (max-width: 700px) { .news-page-wrapper { padding: 40px 20px 80px; } }
+
+  .page-header { margin-bottom: 60px; text-align: left; }
+
+  .section-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem; font-weight: 600;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: #cc7a6f; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; display: inline-block; height: 1px; flex: 1;
+    background: #edddd0; max-width: 60px;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700; color: #1a1514; line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .section-heading em { color: #cc7a6f; font-style: italic; }
+
+  .category-section {
+    margin-bottom: 60px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid #f3ece4;
+  }
+  .category-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .category-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: #1a1514;
+    margin-bottom: 30px;
+    font-style: italic;
+  }
+
+  /* ── News Cards ── */
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 900px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .news-grid { grid-template-columns: 1fr; } }
+
+  .news-card {
+    background: #ffffff;
+    border: 1px solid #e4d9d1;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .news-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px rgba(44,37,35,.10);
+  }
+  .news-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #cc7a6f, #e8a898);
+    z-index: 1;
+  }
+
+  .news-thumb {
+    width: 100%; aspect-ratio: 4/3;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fdf4ee, #f0e4d4);
+    position: relative;
+  }
+  .news-thumb img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.4s ease;
+  }
+  .news-card:hover .news-thumb img { transform: scale(1.05); }
+
+  .news-info {
+    padding: 24px;
+    display: flex; flex-direction: column; flex-grow: 1; gap: 12px;
+  }
+  
+  .news-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; font-weight: 700;
+    color: #1a1514; line-height: 1.4;
+    transition: color 0.2s;
+  }
+  .news-card:hover .news-title { color: #cc7a6f; }
+
+  .news-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: .68rem; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: #b09a92;
+    margin-top: auto;
+  }
+
 {% endblock %}
 
 {% block content %}
-<div class="container">
-        {% for category in categories %}
-            <section class="category-section">
-                <h2 class="category-heading">{{ category.name }}</h2>
-                <div class="news-grid">
-                    {% for post in posts %}
-                        {% if post.category == category %}
-                            <article class="news-card">
-                                <div class="news-thumb">
-                                    {% if post.image %}
-                                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
-                                    {% else %}
-                                        <img src="https://via.placeholder.com/400" alt="no image">
-                                    {% endif %}
-                                </div>
-                                <div class="news-info">
-                                    <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
-                                    <span class="news-date">{{ post.date }}</span>
-                                </div>
-                            </article>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </section>
-        {% endfor %}
+<div class="news-page-wrapper">
+    
+    <!-- Header của trang -->
+    <div class="page-header fade-up fade-up-1">
+        <p class="section-label">Tin tức & Bài viết</p>
+        <h1 class="section-heading">Góc nhìn từ<br /><em>những trang viết</em></h1>
     </div>
+
+    <!-- Danh mục & Danh sách bài viết -->
+    {% for category in categories %}
+        <section class="category-section fade-up fade-up-2">
+            <h2 class="category-heading">{{ category.name }}</h2>
+            
+            <div class="news-grid">
+                {% for post in posts %}
+                    {% if post.category == category %}
+                        <a href="{% url 'post_detail' post.pk %}" class="news-card">
+                            <div class="news-thumb">
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/400x300/fdf4ee/cc7a6f?text=NÓTE" alt="no image">
+                                {% endif %}
+                            </div>
+                            <div class="news-info">
+                                <h3 class="news-title">{{ post.title }}</h3>
+                                <span class="news-date">{{ post.date }}</span>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+    {% endfor %}
+
+</div>
 {% endblock %}
