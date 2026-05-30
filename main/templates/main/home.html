@@ -1,61 +1,250 @@
 {% extends 'main/base.html' %}
-
 {% block title %}Trang Chủ — NÓTE{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* BANNER */
+    .slider-wrapper { width: 100%; max-width: 1100px; height: 420px; margin: 0 auto; position: relative; overflow: hidden; border-bottom: 1px solid #f3ece4; }
+    .slides-track { display: flex; flex-wrap: nowrap; height: 100%; transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: transform; }
+    .slide-item { width: 100%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; flex: 0 0 100%; overflow: hidden; background-color: #f6f4f2; }
+    .slide-item img.slide-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slide-item.no-img { color: #7a6e6a; font-weight: 600; font-size: 18px; background-color: #e9e6e4; }
+    .slide-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(253,251,247,0.15); }
+    .slide-text-box { position: relative; z-index: 2; text-align: center; color: #1a1514; max-width: 700px; padding: 30px; background: rgba(255,255,255,0.85); border: 1px solid rgba(243,236,228,0.6); backdrop-filter: blur(5px); border-radius: 2px; }
+    .slide-text-box h2 { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 600; font-style: italic; margin: 0 0 15px 0; }
+    .slide-text-box p { font-size: 13px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; color: #6e5f5c; margin: 0; }
+    .slider-indicators { position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 14px; z-index: 10; }
+    .indicator-dot { width: 6px; height: 6px; background-color: rgba(44,37,35,0.2); border-radius: 50%; cursor: pointer; transition: all 0.4s; }
+    .indicator-dot.active { background-color: #cc7a6f; transform: scale(1.4); }
+    .slider-control { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(26,21,20,0.5); color: #fff; border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 20; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .slider-control.prev { left: 18px; }
+    .slider-control.next { right: 18px; }
+
+    .slider-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            height: 420px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #f3ece4;
+        }
+        .slides-track {
+            display: flex;
+            flex-wrap: nowrap;
+            height: 100%;
+            transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); /* Hiệu ứng lướt lướt êm ái quý phái */
+            will-change: transform;
+        }
+        .slide-item {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 100%;
+            overflow: hidden;
+            /* subtle background to detect missing/white images */
+            background-color: #f6f4f2;
+        }
+        .slide-item img.slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .slide-item.no-img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7a6e6a;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            background-color: #e9e6e4;
+        }
+        /* Lớp phủ mịn làm dịu ảnh cho chữ nổi lên */
+        .slide-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(253, 251, 247, 0.15); 
+        }
+        .slide-text-box {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #1a1514;
+            max-width: 700px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.85); /* Khung nền giấy mờ lãng mạn */
+            border: 1px solid rgba(243,236,228,0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 2px;
+        }
+        .slide-text-box h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 600;
+            font-style: italic;
+            margin: 0 0 15px 0;
+            color: #1a1514;
+        }
+        .slide-text-box p {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #6e5f5c;
+            margin: 0;
+        }
+
+    /* TRUST */
+    .main-container { max-width: 1100px; margin: 70px auto; padding: 0 20px; }
+    .section-headline { text-align: center; font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 600; color: #1a1514; margin-bottom: 50px; letter-spacing: 1px; }
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 35px; text-align: center; }
+    .trust-card { background: #ffffff; padding: 45px 25px; border-radius: 2px; box-shadow: 0 4px 25px rgba(230,220,210,0.15); border: 1px solid #f3ece4; transition: all 0.3s; }
+    .trust-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(216,196,182,0.25); }
+    .trust-number { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600; font-style: italic; color: #cc7a6f; }
+    .trust-text { font-size: 11px; font-weight: 600; color: #8c7e7a; margin-top: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+    /* FEEDBACK */
+    .feedback-section { max-width: 1100px; margin: 70px auto; padding: 0 20px; }
+    .feedback-container { background: #ffffff; padding: 60px; border-radius: 2px; border: 1px solid #f3ece4; box-shadow: 0 4px 25px rgba(230,220,210,0.12); }
+    .feedback-row { border-bottom: 1px solid #fbf9f6; padding: 30px 0; }
+    .feedback-row:last-child { border-bottom: none; }
+    .feedback-content { font-family: 'Cormorant Garamond', serif; font-style: italic; color: #3d3331; line-height: 1.8; font-size: 20px; margin: 0; }
+    .feedback-signature { text-align: right; font-weight: 600; font-size: 12px; color: #cc7a6f; margin-top: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+    /* BANNER CHỮ */
+    .text-banners { max-width: 1100px; margin: 70px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 16px; }
+    .text-banner-item { background: #ffffff; border: 1px solid #f3ece4; padding: 30px 40px; text-align: center; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: #3d3331; border-radius: 2px; box-shadow: 0 4px 15px rgba(230,220,210,0.1); transition: all 0.3s; }
+    .text-banner-item:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(216,196,182,0.2); color: #cc7a6f; }
+
+    /* FOOTER VISITOR */
+    .visitor-box { text-align: center; padding: 20px; }
+    .visitor-count { font-family: 'Playfair Display', serif; font-size: 36px; color: #cc7a6f; }
+    .visitor-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #8c7e7a; margin-top: 8px; }
+</style>
+{% endblock %}
+
 {% block footer_extra %}
-<div class="visitor-count">{{ visitor_count }}</div>
-<p style="font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:20px;">Lượt truy cập</p>
+<div class="visitor-box">
+    <div class="visitor-count">{{ visitor_count }}</div>
+    <div class="visitor-label">Lượt truy cập</div>
+</div>
 {% endblock %}
 
 {% block content %}
-<!-- BANNER TỰ ĐỘNG -->
+
+<!-- BANNER SLIDER -->
 <div class="slider-wrapper">
-    <div class="slides-track" id="slidesTrack">
-        {% for banner in banners %}
-        <div class="slide-item">
-            <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
-            <div class="slide-overlay"></div>
-            {% if banner.title %}
-            <div class="slide-text-box">
-                <h2>{{ banner.title }}</h2>
-                <p>{{ banner.subtitle }}</p>
+    <div class="slides-track" id="track-movement">
+        {% if banners %}
+            {% for banner in banners %}
+            <div class="slide-item">
+                <img class="slide-img" src="{{ banner.image.url }}" alt="{{ banner.title }}">
+                <div class="slide-overlay"></div>
+                {% if banner.title %}
+                <div class="slide-text-box">
+                    <h2>{{ banner.title }}</h2>
+                    <p>{{ banner.subtitle }}</p>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
-        </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <div class="slide-item no-img">Chưa có banner — thêm qua trang Admin</div>
+        {% endif %}
     </div>
-    <div class="slider-indicators" id="indicators"></div>
-    <button class="slider-control prev" onclick="changeSlide(-1)">&#8249;</button>
-    <button class="slider-control next" onclick="changeSlide(1)">&#8250;</button>
+    <div class="slider-indicators" id="dotsContainer"></div>
+    <button class="slider-control prev" onclick="prevSlide()">‹</button>
+    <button class="slider-control next" onclick="nextSlide()">›</button>
+</div>
+
+<!-- TRUST SECTION -->
+<div class="main-container">
+    <h3 class="section-headline">Hành Trình Kiến Tạo Bản Sắc</h3>
+    <div class="trust-grid">
+        <div class="trust-card">
+            <div class="trust-number">20+ Năm</div>
+            <div class="trust-text">Kinh nghiệm in ấn chế tác sổ tay</div>
+        </div>
+        <div class="trust-card">
+            <div class="trust-number">5,000+</div>
+            <div class="trust-text">Doanh nghiệp & Trường học đồng hành</div>
+        </div>
+        <div class="trust-card">
+            <div class="trust-number">100.000</div>
+            <div class="trust-text">Ấn phẩm tiêu chuẩn mỗi ngày</div>
+        </div>
+    </div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="feedback-section">
+    <div class="feedback-container">
+        <h2 style="text-align:center; font-family:'Playfair Display',serif; font-size:32px; font-weight:600; color:#1a1514; margin-bottom:40px;">Ý Kiến Khách Hàng</h2>
+        <div class="feedback-row">
+            <p class="feedback-content">"Chất lượng sổ tay rất tuyệt vời, chất giấy mịn chống lóa tốt, bìa thiết kế màu pastel cực kỳ sang trọng."</p>
+            <div class="feedback-signature">— Chị MaiCle- Giáo viên</div>
+        </div>
+        <div class="feedback-row">
+            <p class="feedback-content">"Hãng đáp ứng đúng tiến độ giao số lượng lớn 5000 cuốn vở cho mùa tựu trường."</p>
+            <div class="feedback-signature">— Anh Tuấn - Quản lý Trường THPT Nguyễn Trãi</div>
+        </div>
+    </div>
+</div>
+
+<!-- 5 BANNERS CHỮ -->
+<div class="text-banners">
+    <div class="text-banner-item">"Tôi rất hài lòng về sản phẩm — giấy mịn, mực không lem, thiết kế rất đẹp."</div>
+    <div class="text-banner-item">"Tôi rất hài lòng về sản phẩm — sẽ tiếp tục ủng hộ NÓTE dài lâu."</div>
+    <div class="text-banner-item">"Tôi rất hài lòng về sản phẩm — xứng đáng là thương hiệu văn phòng phẩm số 1."</div>
 </div>
 
 <script>
-    let current = 0;
-    const track = document.getElementById('slidesTrack');
-    const slides = track.children;
-    const total = slides.length;
-    const indicatorContainer = document.getElementById('indicators');
+    let currentActiveSlide = 0;
+    const trackMovement = document.getElementById('track-movement');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const slides = document.querySelectorAll('.slide-item');
+    const totalSlides = slides.length;
 
-    for (let i = 0; i < total; i++) {
-        const dot = document.createElement('span');
+    // Tạo dots tự động
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
         dot.className = 'indicator-dot' + (i === 0 ? ' active' : '');
         dot.onclick = () => goToSlide(i);
-        indicatorContainer.appendChild(dot);
+        dotsContainer.appendChild(dot);
     }
 
-    function goToSlide(n) {
-        current = n;
-        track.style.transform = `translateX(-${current * 100}%)`;
+    function refreshSliderUI() {
+        trackMovement.style.width = `${totalSlides * 100}%`;
+        slides.forEach(slide => {
+            slide.style.flex = '0 0 100%';
+            slide.style.width = `${100 / totalSlides}%`;
+        });
+        const shiftPercent = currentActiveSlide * (100 / totalSlides);
+        trackMovement.style.transform = `translateX(-${shiftPercent}%)`;
         document.querySelectorAll('.indicator-dot').forEach((d, i) => {
-            d.classList.toggle('active', i === current);
+            d.classList.toggle('active', i === currentActiveSlide);
         });
     }
 
-    function changeSlide(dir) {
-        current = (current + dir + total) % total;
-        goToSlide(current);
-    }
+    function prevSlide() { currentActiveSlide = (currentActiveSlide - 1 + totalSlides) % totalSlides; refreshSliderUI(); }
+    function nextSlide() { currentActiveSlide = (currentActiveSlide + 1) % totalSlides; refreshSliderUI(); }
+    function goToSlide(n) { currentActiveSlide = n; refreshSliderUI(); }
 
-    setInterval(() => changeSlide(1), 4000);
+    let autoTimer = setInterval(nextSlide, 4000);
+    const sliderEl = document.querySelector('.slider-wrapper');
+    sliderEl.addEventListener('mouseenter', () => clearInterval(autoTimer));
+    sliderEl.addEventListener('mouseleave', () => { autoTimer = setInterval(nextSlide, 4000); });
+
+    window.addEventListener('load', refreshSliderUI);
+    window.addEventListener('resize', refreshSliderUI);
 </script>
+
 {% endblock %}

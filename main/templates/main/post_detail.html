@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+{% block title %}{{ post.title }} — NÓTE{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+        <a class="back-link" href="{% url 'news' %}">← Quay lại tin tức</a>
+
+        {% if post.image %}
+            <img class="post-image" src="{{ post.image.url }}" alt="{{ post.title }}">
+        {% endif %}
+
+        <p class="post-category">{{ post.category.name }}</p>
+        <h1 class="post-title">{{ post.title }}</h1>
+        <p class="post-date">{{ post.date }}</p>
+
+        <hr class="divider">
+
+        <div class="post-content">{{ post.content }}</div>
+    </div>
+{% endblock %}
