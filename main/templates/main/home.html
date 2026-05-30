@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Trang Chủ — NÓTE{% endblock %}
+
+{% block footer_extra %}
+<div class="visitor-count">{{ visitor_count }}</div>
+<p style="font-size:11px; letter-spacing:2px; text-transform:uppercase; margin-bottom:20px;">Lượt truy cập</p>
+{% endblock %}
+
+{% block content %}
+<!-- BANNER TỰ ĐỘNG -->
+<div class="slider-wrapper">
+    <div class="slides-track" id="slidesTrack">
+        {% for banner in banners %}
+        <div class="slide-item">
+            <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
+            <div class="slide-overlay"></div>
+            {% if banner.title %}
+            <div class="slide-text-box">
+                <h2>{{ banner.title }}</h2>
+                <p>{{ banner.subtitle }}</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="slider-indicators" id="indicators"></div>
+    <button class="slider-control prev" onclick="changeSlide(-1)">&#8249;</button>
+    <button class="slider-control next" onclick="changeSlide(1)">&#8250;</button>
+</div>
+
+<script>
+    let current = 0;
+    const track = document.getElementById('slidesTrack');
+    const slides = track.children;
+    const total = slides.length;
+    const indicatorContainer = document.getElementById('indicators');
+
+    for (let i = 0; i < total; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'indicator-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => goToSlide(i);
+        indicatorContainer.appendChild(dot);
+    }
+
+    function goToSlide(n) {
+        current = n;
+        track.style.transform = `translateX(-${current * 100}%)`;
+        document.querySelectorAll('.indicator-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+        });
+    }
+
+    function changeSlide(dir) {
+        current = (current + dir + total) % total;
+        goToSlide(current);
+    }
+
+    setInterval(() => changeSlide(1), 4000);
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+from django.shortcuts import render, get_object_or_404
+from .models import Product, Category, Post, Banner, Visitor
+
+def home(request):
+    banners = Banner.objects.all()
+    # Đếm lượt truy cập
+    visitor, created = Visitor.objects.get_or_create(id=1)
+    visitor.count += 1
+    visitor.save()
+    return render(request, 'main/home.html', {
+        'banners': banners,
+        'visitor_count': visitor.count
+    })
+
+def product_list(request):
+    products = Product.objects.all()
+    return render(request, 'main/product_list.html', {'products': products})
+
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'main/product_detail.html', {'product': product})
+
+def about(request):
+    return render(request, 'main/about.html')
+
+def news(request):
+    categories = Category.objects.all()
+    posts = Post.objects.all()
+    return render(request, 'main/news.html', {
+        'categories': categories,
+        'posts': posts
+    })
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    return render(request, 'main/post_detail.html', {'post': post})
+
+def contact(request):
+    return render(request, 'main/contact.html')
