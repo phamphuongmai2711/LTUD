@@ -174,7 +174,7 @@
 <!-- LƯỚI SẢN PHẨM -->
 <div class="product-grid">
     {% for product in products %}
-    <div class="product-card cat-{{ product.category.id }}" data-cat="cat-{{ product.category.id }}">
+    <div class="product-card {% if product.category %}cat-{{ product.category.id }}{% endif %}" data-cat="{% if product.category %}cat-{{ product.category.id }}{% else %}all{% endif %}">
         <a href="{% url 'product_detail' product.pk %}">
             {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -206,27 +206,5 @@
         });
     }
 </script>
-    
-
-
-
-
-    <div class="product-grid">
-        {% for product in products %}
-        <div class="product-card">
-            <a href="{% url 'product_detail' product.pk %}">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                {% else %}
-                    <div class="no-image">Chưa có ảnh</div>
-                {% endif %}
-                <div class="product-info">
-                    <h3>{{ product.name }}</h3>
-                    <p class="price">{{ product.price }}đ</p>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
 
 {% endblock %}
