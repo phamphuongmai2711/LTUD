@@ -1,13 +1,157 @@
 {% extends 'main/base.html' %}
 {% block title %}{{ product.name }} — NÓTE{% endblock %}
 
+{% block extra_css %}
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.3s; }
+
+  /* ── Layout & Wrapper ── */
+  .product-detail-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 40px 100px;
+  }
+  @media (max-width: 600px) {
+    .product-detail-wrapper { padding: 30px 20px 80px; }
+  }
+
+  /* ── Back Link (Đồng bộ với tin tức) ── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #b09a92;
+    text-decoration: none;
+    margin-bottom: 40px;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .back-link:hover {
+    color: #cc7a6f;
+    transform: translateX(-4px);
+  }
+  .back-link svg {
+    width: 14px; height: 14px;
+  }
+
+  /* ── Product Grid ── */
+  .product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  @media (max-width: 850px) {
+    .product-detail-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  /* ── Hình ảnh sản phẩm ── */
+  .detail-image-box {
+    background: linear-gradient(135deg, #fdf4ee, #f0e4d4);
+    border: 1px solid #e4d9d1;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 16px 40px rgba(44,37,35,0.06);
+  }
+  .detail-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .no-image {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #b09a92;
+  }
+
+  /* ── Thông tin sản phẩm ── */
+  .detail-info {
+    padding-top: 10px;
+  }
+  .product-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: #1a1514;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .product-price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #cc7a6f;
+    letter-spacing: 0.05em;
+    margin-bottom: 30px;
+  }
+
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, #edddd0, transparent);
+    margin: 0 0 30px 0;
+  }
+
+  .info-group {
+    margin-bottom: 24px;
+  }
+  .info-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #b09a92;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .info-label::before {
+    content: '';
+    display: inline-block;
+    width: 12px; height: 1px;
+    background: #cc7a6f;
+    opacity: 0.5;
+  }
+  .info-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    color: #3d3331;
+    line-height: 1.7;
+  }
+{% endblock %}
+
 {% block content %}
-<a class="back-link" href="{% url 'product_list' %}">← Quay lại danh sách</a>
+<div class="product-detail-wrapper">
 
-    <div class="detail-container">
+    <a class="back-link fade-up fade-up-1" href="{% url 'product_list' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Quay lại bộ sưu tập
+    </a>
 
-        <!-- ẢNH -->
-        <div class="detail-image">
+    <div class="product-detail-grid">
+        
+        <div class="detail-image-box fade-up fade-up-2">
             {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}">
             {% else %}
@@ -15,19 +159,27 @@
             {% endif %}
         </div>
 
-        <!-- THÔNG TIN -->
-        <div class="detail-info">
-            <h2>{{ product.name }}</h2>
-            <p class="price">{{ product.price }}đ</p>
+        <div class="detail-info fade-up fade-up-3">
+            <h1 class="product-title">{{ product.name }}</h1>
+            <p class="product-price">{{ product.price }}đ</p>
 
             <hr class="divider">
 
-            <p class="label">Số lượng</p>
-            <p class="value">{{ product.quantity }}</p>
+            <div class="info-group">
+                <p class="info-label">Số lượng hiện có</p>
+                <p class="info-value">{{ product.quantity }} ấn phẩm</p>
+            </div>
 
-            <p class="label">Mô tả sản phẩm</p>
-            <p class="value">{{ product.description }}</p>
+            <div class="info-group">
+                <p class="info-label">Mô tả chi tiết</p>
+                <div class="info-value">
+                    {{ product.description|linebreaks }}
+                </div>
+            </div>
+            
         </div>
 
     </div>
+
+</div>
 {% endblock %}

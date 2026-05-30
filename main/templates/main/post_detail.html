@@ -1,20 +1,189 @@
 {% extends 'main/base.html' %}
 {% block title %}{{ post.title }} — NÓTE{% endblock %}
 
+{% block extra_css %}
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.3s; }
+
+  /* ── Layout & Wrapper ── */
+  .post-detail-wrapper {
+    max-width: 800px; /* Thu hẹp lại để mắt đọc không bị mỏi */
+    margin: 0 auto;
+    padding: 40px 20px 100px;
+  }
+
+  /* ── Back Link ── */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #b09a92;
+    text-decoration: none;
+    margin-bottom: 50px;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .back-link:hover {
+    color: #cc7a6f;
+    transform: translateX(-4px);
+  }
+  .back-link svg {
+    width: 14px; height: 14px;
+  }
+
+  /* ── Post Header ── */
+  .post-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .post-category {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #cc7a6f;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .post-category::before,
+  .post-category::after {
+    content: '';
+    display: inline-block; height: 1px; width: 30px;
+    background: #cc7a6f; opacity: 0.4;
+  }
+  .post-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: #1a1514;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .post-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #7a6a65;
+  }
+
+  /* ── Post Hero Image ── */
+  .post-hero-image {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 16px 40px rgba(44,37,35,0.08);
+    margin-bottom: 40px;
+    border: 1px solid #e4d9d1;
+    overflow: hidden;
+  }
+  .post-hero-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 500px;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #edddd0 20%, #edddd0 80%, transparent);
+    margin: 0 0 40px 0;
+  }
+
+  /* ── Post Content (Typography) ── */
+  .post-content {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    color: #3d3331;
+    line-height: 1.85;
+  }
+  
+  /* CSS dành riêng cho các thành phần bên trong bài viết */
+  .post-content p {
+    margin-bottom: 1.6em;
+  }
+  .post-content h2, .post-content h3, .post-content h4 {
+    font-family: 'Playfair Display', serif;
+    color: #1a1514;
+    line-height: 1.3;
+    margin-top: 2em;
+    margin-bottom: 1em;
+  }
+  .post-content h2 { font-size: 2rem; font-weight: 700; }
+  .post-content h3 { font-size: 1.6rem; font-style: italic; }
+  .post-content strong { color: #1a1514; font-weight: 600; }
+  .post-content em { color: #cc7a6f; }
+  .post-content blockquote {
+    margin: 2em 0;
+    padding: 1.5em 2em;
+    border-left: 3px solid #cc7a6f;
+    background: #fdf4ee;
+    font-style: italic;
+    font-size: 1.35rem;
+    border-radius: 0 8px 8px 0;
+  }
+  .post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2em 0;
+  }
+  .post-content ul, .post-content ol {
+    margin-bottom: 1.6em;
+    padding-left: 1.5em;
+  }
+  .post-content li { margin-bottom: 0.5em; }
+{% endblock %}
+
 {% block content %}
-<div class="detail-container">
-        <a class="back-link" href="{% url 'news' %}">← Quay lại tin tức</a>
+<div class="post-detail-wrapper">
+    
+    <!-- Nút back -->
+    <a class="back-link fade-up fade-up-1" href="{% url 'news' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Quay lại tin tức
+    </a>
 
-        {% if post.image %}
-            <img class="post-image" src="{{ post.image.url }}" alt="{{ post.title }}">
-        {% endif %}
-
+    <!-- Tiêu đề bài viết -->
+    <header class="post-header fade-up fade-up-1">
         <p class="post-category">{{ post.category.name }}</p>
         <h1 class="post-title">{{ post.title }}</h1>
         <p class="post-date">{{ post.date }}</p>
+    </header>
 
-        <hr class="divider">
-
-        <div class="post-content">{{ post.content }}</div>
+    <!-- Ảnh bìa -->
+    {% if post.image %}
+    <div class="post-hero-image fade-up fade-up-2">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}">
     </div>
+    {% endif %}
+
+    <hr class="divider fade-up fade-up-2">
+
+    <!-- Nội dung bài viết -->
+    <div class="post-content fade-up fade-up-3">
+        <!-- Sử dụng bộ lọc |safe để render mã HTML chính xác -->
+        {{ post.content|safe }}
+    </div>
+
+</div>
 {% endblock %}
