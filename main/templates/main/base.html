@@ -10,7 +10,7 @@
         body { font-family: 'Montserrat', sans-serif; background-color: #fdfbf7; color: #2c2523; }
 
         /* HEADER */
-        header { background-color: #ffffff; position: fixed; top: 0; width: 100%; z-index: 1000; box-shadow: 0 4px 25px rgba(44,37,35,0.03); border-bottom: 1px solid #f3ece4; }
+        header { background-color: #ffffff; position: sticky; top: 0; width: 100%; z-index: 1000; box-shadow: 0 4px 25px rgba(44,37,35,0.03); border-bottom: 1px solid #f3ece4; }
         .main-nav-container { max-width: 1200px; margin: 0 auto; padding: 22px 20px; display: flex; flex-direction: column; align-items: center; }
         .brand-logo { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; letter-spacing: 10px; color: #1a1514; margin-bottom: 18px; cursor: pointer; text-decoration: none; }
         .menu-links { display: flex; gap: 30px; }
@@ -19,7 +19,7 @@
         .menu-links a::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 1px; background-color: #cc7a6f; transition: all 0.35s ease; transform: translateX(-50%); }
         .menu-links a:hover::after { width: 100%; }
 
-        .content-wrapper { margin-top: 130px; }
+        .content-wrapper { margin-top: 0; }
 
         /* FOOTER */
         footer { background-color: #1a1514; color: #f3ece4; text-align: center; padding: 40px 20px; margin-top: 80px; font-size: 13px; letter-spacing: 1px; }
@@ -51,6 +51,6 @@
     {% block footer_extra %}{% endblock %}
     <p>© 2026 NÓTE — Đồ dùng học tập</p>
 </footer>
-
+{% block extra_js %}{% endblock %}
 </body>
 </html>
