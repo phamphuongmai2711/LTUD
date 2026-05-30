@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% block title %}{{ product.name }} — NÓTE{% endblock %}
+
+{% block content %}
+<a class="back-link" href="{% url 'product_list' %}">← Quay lại danh sách</a>
+
+    <div class="detail-container">
+
+        <!-- ẢNH -->
+        <div class="detail-image">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+                <div class="no-image">Chưa có ảnh</div>
+            {% endif %}
+        </div>
+
+        <!-- THÔNG TIN -->
+        <div class="detail-info">
+            <h2>{{ product.name }}</h2>
+            <p class="price">{{ product.price }}đ</p>
+
+            <hr class="divider">
+
+            <p class="label">Số lượng</p>
+            <p class="value">{{ product.quantity }}</p>
+
+            <p class="label">Mô tả sản phẩm</p>
+            <p class="value">{{ product.description }}</p>
+        </div>
+
+    </div>
+{% endblock %}
