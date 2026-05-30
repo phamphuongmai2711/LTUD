@@ -1,1 +1,1 @@
-web: gunicorn note_project.wsgi
+web: python manage.py migrate && gunicorn note_project.wsgi
