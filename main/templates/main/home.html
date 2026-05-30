@@ -24,7 +24,11 @@
     overflow: hidden; background-color: #f5ede0;
   }
   .slide-item img.slide-img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
+    position: absolute; /* Đưa ảnh làm hình nền để không đẩy hộp chữ */
+    top: 0; left: 0;
+    width: 100%; height: 100%; 
+    object-fit: cover; display: block;
+    z-index: 1;
   }
   .slide-item.no-img {
     font-family: 'Cormorant Garamond', serif;
@@ -33,15 +37,16 @@
   }
   /* ruled-paper overlay on each slide */
   .slide-overlay {
-    position: absolute; inset: 0;
-    background: rgba(26,21,20,0.35);
+    position: absolute; inset: 0; z-index: 2;
+    /* Đã xóa dòng rgba màu đen để giữ nguyên 100% màu sắc gốc của ảnh */
     background-image: repeating-linear-gradient(
       transparent, transparent 39px,
       rgba(204,122,111,.06) 39px, rgba(204,122,111,.06) 40px
     );
+    pointer-events: none; /* Không cản trở click chuột */
   }
   .slide-text-box {
-    position: relative; z-index: 2; text-align: center;
+    position: relative; z-index: 3; text-align: center; /* Nổi lên trên cùng */
     max-width: 640px; padding: 36px 44px;
     background: rgba(253,248,242,0.88);
     border: 1px solid rgba(237,221,208,.7);
@@ -321,7 +326,6 @@
 
 {% block content %}
 
-  <!-- ══════════════ BANNER SLIDER ══════════════ -->
   <div class="slider-wrapper">
     <div class="slides-track" id="track-movement">
       {% if banners %}
@@ -351,7 +355,6 @@
     <button class="slider-control next" onclick="nextSlide()">&#8250;</button>
   </div>
 
-  <!-- ══════════════ TRUST / STATS ══════════════ -->
   <section class="home-section trust-band">
     <p class="section-label">Hành trình của NÓTE</p>
     <h2 class="section-heading">Kiến tạo<br /><em>bản sắc Việt</em></h2>
@@ -373,7 +376,6 @@
 
   
 
-  <!-- ══════════════ FEEDBACK ══════════════ -->
   <section class="home-section feedback-section">
     <p class="section-label">Khách hàng nói gì</p>
     <h2 class="section-heading">Ý kiến<br /><em>từ trái tim</em></h2>
@@ -402,10 +404,8 @@
     </div>
   </section>
 
-  <!-- ══════════════ MARQUEE ══════════════ -->
   <div class="marquee-wrap">
     <div class="marquee-track">
-      <!-- 2 bản giống nhau để vòng lặp liền mạch -->
       {% for _ in "12345"|make_list %}
       <span class="marquee-item">Giấy mịn, mực không lem, thiết kế đẹp</span>
       <span class="marquee-item">Sổ tay Made in Vietnam</span>
@@ -416,7 +416,6 @@
     </div>
   </div>
 
-  <!-- ══════════════ SLIDER SCRIPT ══════════════ -->
   <script>
     let currentSlide = 0;
     const track     = document.getElementById('track-movement');
