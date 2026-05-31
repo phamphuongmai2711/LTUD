@@ -1,5 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, Category, Post, Banner, Visitor, ProductCategory
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from .models import ContactMessage
 
 def home(request):
     banners = Banner.objects.all()  
@@ -39,4 +43,18 @@ def post_detail(request, pk):
     return render(request, 'main/post_detail.html', {'post': post})
 
 def contact(request):
+    return render(request, 'main/contact.html')
+
+@csrf_protect
+def contact(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        ContactMessage.objects.create(
+            fname   = data.get('fname', ''),
+            email   = data.get('email', ''),
+            phone   = data.get('phone', ''),
+            subject = data.get('subject', ''),
+            message = data.get('message', ''),
+        )
+        return JsonResponse({'status': 'ok'})
     return render(request, 'main/contact.html')

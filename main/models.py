@@ -46,3 +46,28 @@ class Visitor(models.Model):
 
     def __str__(self):
         return f"Lượt truy cập: {self.count}"
+    
+
+class ContactMessage(models.Model):
+    STATUS = [
+        ('new', 'Mới'),
+        ('replied', 'Đã phản hồi'),
+        ('closed', 'Đóng'),
+    ]
+    fname      = models.CharField(max_length=100)
+    email      = models.EmailField()
+    phone      = models.CharField(max_length=20, blank=True)
+    subject    = models.CharField(max_length=200, blank=True)
+    message    = models.TextField()
+    status     = models.CharField(max_length=10, choices=STATUS, default='new')
+    reply_text = models.TextField(blank=True)          # nội dung phản hồi
+    created_at = models.DateTimeField(auto_now_add=True)
+    replied_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Tin nhắn liên hệ'
+        verbose_name_plural = 'Tin nhắn liên hệ'
+
+    def __str__(self):
+        return f"{self.fname} — {self.subject or 'Không có chủ đề'}"
